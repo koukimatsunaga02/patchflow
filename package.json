@@ -1,0 +1,1 @@
+{"name":"patchflow","private":true,"scripts":{"db:generate":"drizzle-kit generate","build:collab":"node scripts/build-collab.cjs"},"devDependencies":{"drizzle-kit":"0.31.10","drizzle-orm":"0.45.2","linkedom":"^0.18.12"}}
