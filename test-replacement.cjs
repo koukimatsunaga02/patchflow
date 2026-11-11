@@ -1,0 +1,26 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const src=fs.readFileSync('dist/app.js','utf8');
+const pre=src.slice(0,src.indexOf('try{state=JSON.parse'));
+const refs=src.slice(src.indexOf('const node=id'),src.indexOf('function catalog'));
+const rules=src.slice(src.indexOf('function compatible'),src.indexOf('function connect('));
+const type=src.slice(src.indexOf('function cableType('),src.indexOf('function candidateError('));
+const validation=src.slice(src.indexOf('function validate('),src.indexOf("$('#file').onchange"));
+const six=JSON.parse(fs.readFileSync('dist/presets/six-deck.json','utf8'));
+vm.runInContext(pre+refs+rules+type+validation+fs.readFileSync('dist/replacement.js','utf8')+`
+state=demo();const before=JSON.stringify(state),old=state.nodes.find(n=>n.id==='m1');
+const v10=planReplacement(state,'m1','v10');assert.equal(v10.complete,true);assert.equal(v10.project.edges.length,state.edges.length);assert.equal(JSON.stringify(state),before);
+assert.equal(v10.project.nodes.find(n=>n.id==='m1').x,old.x);assert.equal(v10.project.nodes.find(n=>n.id==='m1').group,old.group);
+assert.equal(v10.project.edges.find(e=>e.id==='e0').tp,'ch1L');assert.equal(v10.project.edges.find(e=>e.id==='e4').fp,'masterL');assert.equal(v10.project.edges.find(e=>e.id==='e7').fp,'boothL');
+assert.equal(planReplacement(demo(),'p1','az').complete,true);
+const fewer=planReplacement(six,'v','djm');assert.equal(fewer.complete,false);assert.equal(fewer.rows.length,14);assert.equal(fewer.errors.length,4);assert.equal(fewer.project,null);
+state=demo();state.edges.push({id:'digital',from:'p1',fp:'digital',to:'m1',tp:'dig3',type:'SPDIF',length:2});
+assert.equal(planReplacement(state,'p1','cdj15').complete,false);assert.equal(planReplacement(state,'p1','az').complete,false);assert.equal(planReplacement(state,'p1','cdjnxs2').complete,true);
+let manual={...v10.mapping,'from:masterR':'masterL'};assert.equal(planReplacement(demo(),'m1','v10',manual).complete,false);
+manual={...v10.mapping,'to:ch1L':'ph1L'};assert.equal(planReplacement(demo(),'m1','v10',manual).complete,false);
+const mg=planReplacement(demo(),'m1','mg10');assert.equal(mg.complete,true);let cm={...mg.mapping,'from:masterL':'sttrsL'};const cableChange=planReplacement(demo(),'m1','mg10',cm);assert.equal(cableChange.complete,true);assert(cableChange.changes.some(c=>c.oldType==='XLR'&&c.newType==='TRS'));
+assert.equal(planReplacement(six,'gl','g8040').complete,true);assert.equal(planReplacement(six,'gl','djm').complete,false);
+state=demo();state.edges.push({id:'thru',from:'s1',fp:'out',to:'s4',tp:'in2',type:'XLR',length:3});assert.equal(planReplacement(state,'s1','g8010').complete,false);
+let empty=demo();empty.edges=[];assert.equal(planReplacement(empty,'m1','dm3').complete,true);
+const p1={id:'a',type:'XLR',signal:'line',label:'A'},p2={id:'b',type:'XLR',signal:'line',label:'B'};const match=matchReplacementPorts([{key:'flex',oldPort:p1,candidates:[p1,p2]},{key:'scarce',oldPort:p1,candidates:[p1]}],{ports:[p1,p2]});assert.equal(match.flex,'b');assert.equal(match.scarce,'a');
+`,vm.createContext({assert,six}));
+console.log('PASS: automatic matching, position/group preservation, six-to-four channel rejection, digital port shortage, manual duplicate/signal rejection, cable changes, speaker THRU shortage, no-connection swaps and scarce-port matching');

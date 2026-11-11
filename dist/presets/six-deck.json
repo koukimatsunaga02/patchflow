@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "title": "6 Decks / CDJ-2000NXS2 + DJM-V10",
+  "groups": [],
+  "nodes": [
+    {
+      "id": "d1",
+      "model": "cdjnxs2",
+      "name": "CDJ-2000NXS2 #1",
+      "group": "",
+      "x": 30,
+      "y": 85
+    },
+    {
+      "id": "d2",
+      "model": "cdjnxs2",
+      "name": "CDJ-2000NXS2 #2",
+      "group": "",
+      "x": 270,
+      "y": 85
+    },
+    {
+      "id": "d3",
+      "model": "cdjnxs2",
+      "name": "CDJ-2000NXS2 #3",
+      "group": "",
+      "x": 510,
+      "y": 85
+    },
+    {
+      "id": "d4",
+      "model": "cdjnxs2",
+      "name": "CDJ-2000NXS2 #4",
+      "group": "",
+      "x": 30,
+      "y": 525
+    },
+    {
+      "id": "d5",
+      "model": "cdjnxs2",
+      "name": "CDJ-2000NXS2 #5",
+      "group": "",
+      "x": 270,
+      "y": 525
+    },
+    {
+      "id": "d6",
+      "model": "cdjnxs2",
+      "name": "CDJ-2000NXS2 #6",
+      "group": "",
+      "x": 510,
+      "y": 525
+    },
+    {
+      "id": "v",
+      "model": "v10",
+      "name": "DJM-V10 / 6 Decks",
+      "group": "",
+      "x": 790,
+      "y": 85
+    },
+    {
+      "id": "gl",
+      "model": "g8030",
+      "name": "8030C L",
+      "group": "",
+      "x": 1140,
+      "y": 135
+    },
+    {
+      "id": "gr",
+      "model": "g8030",
+      "name": "8030C R",
+      "group": "",
+      "x": 1140,
+      "y": 535
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0L",
+      "fp": "analogL",
+      "to": "v",
+      "tp": "ch1L",
+      "type": "RCA",
+      "length": 2,
+      "from": "d1"
+    },
+    {
+      "id": "e0R",
+      "fp": "analogR",
+      "to": "v",
+      "tp": "ch1R",
+      "type": "RCA",
+      "length": 2,
+      "from": "d1"
+    },
+    {
+      "id": "e1L",
+      "fp": "analogL",
+      "to": "v",
+      "tp": "ch2L",
+      "type": "RCA",
+      "length": 2,
+      "from": "d2"
+    },
+    {
+      "id": "e1R",
+      "fp": "analogR",
+      "to": "v",
+      "tp": "ch2R",
+      "type": "RCA",
+      "length": 2,
+      "from": "d2"
+    },
+    {
+      "id": "e2L",
+      "fp": "analogL",
+      "to": "v",
+      "tp": "ch3L",
+      "type": "RCA",
+      "length": 2,
+      "from": "d3"
+    },
+    {
+      "id": "e2R",
+      "fp": "analogR",
+      "to": "v",
+      "tp": "ch3R",
+      "type": "RCA",
+      "length": 2,
+      "from": "d3"
+    },
+    {
+      "id": "e3L",
+      "fp": "analogL",
+      "to": "v",
+      "tp": "ch4L",
+      "type": "RCA",
+      "length": 2,
+      "from": "d4"
+    },
+    {
+      "id": "e3R",
+      "fp": "analogR",
+      "to": "v",
+      "tp": "ch4R",
+      "type": "RCA",
+      "length": 2,
+      "from": "d4"
+    },
+    {
+      "id": "e4L",
+      "fp": "analogL",
+      "to": "v",
+      "tp": "ch5L",
+      "type": "RCA",
+      "length": 2,
+      "from": "d5"
+    },
+    {
+      "id": "e4R",
+      "fp": "analogR",
+      "to": "v",
+      "tp": "ch5R",
+      "type": "RCA",
+      "length": 2,
+      "from": "d5"
+    },
+    {
+      "id": "e5L",
+      "fp": "analogL",
+      "to": "v",
+      "tp": "ch6L",
+      "type": "RCA",
+      "length": 2,
+      "from": "d6"
+    },
+    {
+      "id": "e5R",
+      "fp": "analogR",
+      "to": "v",
+      "tp": "ch6R",
+      "type": "RCA",
+      "length": 2,
+      "from": "d6"
+    },
+    {
+      "id": "mainL",
+      "fp": "masterL",
+      "to": "gl",
+      "tp": "in",
+      "type": "XLR",
+      "length": 5,
+      "from": "v"
+    },
+    {
+      "id": "mainR",
+      "fp": "masterR",
+      "to": "gr",
+      "tp": "in",
+      "type": "XLR",
+      "length": 5,
+      "from": "v"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+const {boot,shared,assert}=require('./test-av-ui.cjs');shared.clear();let app=boot('audio'),run=app.run;
+app.change('#categoryfilter','interface');app.change('#brandfilter','Behringer');
+assert.equal(app.document.querySelectorAll('[data-add]').length,1);
+app.click('[data-add="umc202hd"]');assert.equal(run('state.nodes.at(-1).model'),'umc202hd');
+run(`state={version:1,title:'UMC202HD capture',canvas:{width:4800,height:3200},groups:[],nodes:[{id:'mic',model:'generic_mic',name:'MIC',x:40,y:100},{id:'mix',model:'mg166fx',name:'MG16/6FX',x:400,y:100},{id:'usb',model:'generic_interface',name:'Interface',x:800,y:100},{id:'pc',model:'v_stream_pc',name:'PC',x:1200,y:100},{id:'pa',model:'dbr',name:'Monitor',x:1200,y:600},{id:'amp',model:'px',name:'Amp',x:40,y:600}],edges:[]};render();connect('mic','out');connect('usb','in1');connect('mix','stR');connect('usb','in2');connect('usb','usb');connect('pc','uvc1');connect('usb','lineoutL');connect('pa','in1')`);app.flush();
+assert.equal(run('state.edges.length'),4);
+const plan=run("planReplacement(state,'usb','umc202hd')");assert.equal(plan.complete,true);assert.equal(plan.project.nodes.find(n=>n.id==='usb').model,'umc202hd');assert.equal(plan.project.edges.length,4);
+run(`state=planReplacement(state,'usb','umc202hd').project;render()`);app.flush();
+assert.equal(run('validate(state)===state'),true);
+assert.equal(run("state.edges.find(e=>e.to==='pc').type"),'USB_AUDIO');
+assert.match(run("candidateError('mix','stL','usb','in1')"),/使用|接続/);
+assert.ok(run("compatible(models.px.ports.find(p=>p.signal==='speaker'),models.umc202hd.ports[0])"));
+assert.equal(run("models.umc202hd.ports.filter(p=>p.type==='COMBO'&&p.dir==='in').length"),2);
+assert.equal(run("models.umc202hd.ports.filter(p=>p.type==='TRS'&&p.dir==='out').length"),2);
+assert.equal(run("models.umc202hd.ports.find(p=>p.id==='usb').channels"),2);
+assert.equal(run("models.umc202hd.ports.some(p=>['RCA','MIDI','SPEAKON'].includes(p.type))"),false);
+run('save()');app=boot('audio');assert.equal(app.run('validate(state)===state'),true);assert.equal(app.run("state.nodes.find(n=>n.id==='usb').model"),'umc202hd');assert.equal(app.run('state.edges.length'),4);
+console.log('PASS: UMC202HD library filters/add, 2 physical combo inputs, 2 TRS outputs, USB capture to PC, connected interface replacement, occupied input/speaker-level rejection and saved reload');
