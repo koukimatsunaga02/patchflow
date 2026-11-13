@@ -56,3 +56,5 @@ html .studio #toast{top:auto!important;height:auto;max-height:120px;overflow:aut
 html .studio #routeeditor{width:min(540px,calc(100% - 24px));max-width:calc(100% - 24px)}
 @media(max-width:760px){html .studio #routeeditor{width:calc(100% - 20px);max-width:calc(100% - 20px);left:10px!important;right:10px!important}.cable-section-row{grid-template-columns:18px 84px minmax(80px,1fr) 24px}}
 .cable-junction circle{pointer-events:all}
+
+html .studio #cloudbutton.cloud-connected{border-color:var(--orange);color:var(--orange)}@media(max-width:1050px){html .studio #cloudbutton>span{display:none}html .studio #cloudbutton{width:36px;min-width:36px;padding:7px}}

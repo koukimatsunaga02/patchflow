@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="DJ・PA・配信の音響と映像を、一つのキャンバスで設計。実機の端子に合わせた配線、ケーブルの延長、共同編集、PNG・PDF出力に対応するPATCHFLOW。">
+  <meta name="theme-color" content="#eeede8">
+  <title>PATCHFLOW — 音と映像をつなぐ、配線デザインスタジオ</title>
+  <link rel="stylesheet" href="home.css?v=21">
+  <script src="home.js?v=21" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">本文へスキップ</a>
+<header class="home-header">
+  <a class="home-brand" href="./" aria-label="PATCHFLOW トップページ"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M5 25V11h8v14h10V11h8v14M13 18h10" fill="none" stroke="currentColor" stroke-width="3.5"/></svg><span>patchflow<small>signal design studio</small></span><b>01</b></a>
+  <nav class="home-nav" aria-label="メインナビゲーション"><a href="#workflow">できること</a><a href="#workspace">プロジェクトと共有</a><a href="#start">使い方</a></nav>
+  <div class="header-actions"><button class="theme-switch" id="home-theme" aria-label="ダークモードに切り替え" title="表示テーマを切り替え"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></svg></button><a class="login-link" data-workspace href="https://patchflow-audio-matsunaga.matsunagakoki.chatgpt.site/account.html">ログイン</a><a class="button button-primary header-cta" href="editor.html">スタジオを開く <span aria-hidden="true">↗</span></a></div>
+</header>
+<main id="main">
+  <section class="hero section-shell">
+    <div class="hero-copy"><p class="eyebrow"><span class="live-dot"></span> AUDIO / VIDEO / ONE CANVAS</p><h1>現場の配線を、<br>一枚で共有。</h1><p class="hero-description">DJブースからPA、カメラから配信まで。<br>機材を置いて、端子をつないで、チームに渡す。<br>音と映像のための配線デザインスタジオ。</p><div class="hero-actions"><a class="button button-primary button-large" href="editor.html">ログインせずに試す <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="quiet-link" href="https://patchflow-audio-matsunaga.matsunagakoki.chatgpt.site/account.html">自分のワークスペースへ <span aria-hidden="true">↗</span></a></div><p class="hero-footnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> インストール不要 <span>ブラウザで編集・自動保存</span></p></div>
+    <div class="hero-preview" aria-label="機材と延長ケーブルの操作デモ">
+      <div class="preview-toolbar"><span><i class="window-dot"></i>Live Session <small>/ Main PA</small></span><span class="preview-presence"><b>K</b><b>M</b><small>2人で編集中</small></span></div>
+      <div class="preview-canvas">
+        <div class="preview-caption"><span>PATCH / 01</span><span>音響 + 映像</span></div>
+        <svg class="patch-demo" viewBox="0 0 790 410" role="img" aria-label="CDJ-3000XからDJM-A9、延長ケーブルを経由してDBR12につながる配線例">
+          <defs><pattern id="home-grid" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".7" class="grid-dot"/></pattern></defs>
+          <rect width="790" height="410" fill="url(#home-grid)"/>
+          <rect class="booth-outline" x="24" y="48" width="440" height="324" rx="6"/><text class="booth-name" x="39" y="72">01 / DJ BOOTH</text>
+          <path class="signal-cable cable-rca" d="M212 276C238 276 238 276 264 276"/>
+          <path class="signal-cable cable-xlr" d="M448 276C498 276 514 276 564 276"/>
+          <path class="signal-travel" d="M448 276C498 276 514 276 564 276"/>
+          <g class="demo-node"><rect class="node-body" x="40" y="97" width="172" height="226" rx="4"/><text class="node-maker" x="52" y="117">AlphaTheta</text><text class="node-title" x="52" y="137">CDJ-3000X</text><rect class="node-photo" x="50" y="150" width="152" height="102" rx="2"/><image href="assets/cdjx.webp" x="65" y="155" width="122" height="92"/><path class="node-rule" d="M40 263h172"/><text class="port-label" x="199" y="280" text-anchor="end">AUDIO OUT L</text><circle class="port-dot port-rca" cx="212" cy="276" r="4"/><text class="port-label" x="199" y="302" text-anchor="end">AUDIO OUT R</text><circle class="port-dot port-rca" cx="212" cy="298" r="4"/></g>
+          <g class="demo-node"><rect class="node-body selected-node" x="264" y="97" width="184" height="226" rx="4"/><text class="node-maker" x="276" y="117">Pioneer DJ</text><text class="node-title" x="276" y="137">DJM-A9</text><rect class="node-photo" x="274" y="150" width="164" height="102" rx="2"/><image href="assets/djm.png" x="293" y="154" width="126" height="94"/><path class="node-rule" d="M264 263h184"/><text class="port-label" x="276" y="280">CH 1 LINE L</text><circle class="port-dot port-rca" cx="264" cy="276" r="4"/><text class="port-label" x="436" y="280" text-anchor="end">MASTER 1 L</text><circle class="port-dot port-xlr" cx="448" cy="276" r="4"/><text class="port-label" x="436" y="302" text-anchor="end">MASTER 1 R</text><circle class="port-dot port-xlr" cx="448" cy="298" r="4"/></g>
+          <g class="demo-node"><rect class="node-body" x="564" y="97" width="184" height="226" rx="4"/><text class="node-maker" x="576" y="117">YAMAHA</text><text class="node-title" x="576" y="137">DBR12</text><rect class="node-photo" x="574" y="150" width="164" height="102" rx="2"/><image href="assets/dbr.jpg" x="596" y="156" width="120" height="92"/><path class="node-rule" d="M564 263h184"/><text class="port-label" x="576" y="280">INPUT 1</text><circle class="port-dot port-xlr" cx="564" cy="276" r="4"/><text class="port-label" x="576" y="302">INPUT 2</text><circle class="port-dot port-xlr" cx="564" cy="298" r="4"/></g>
+          <g class="length-chip" id="base-length-chip"><rect x="457" y="245" width="36" height="20" rx="3"/><text x="475" y="259" text-anchor="middle">3m</text></g>
+          <g class="length-chip extension-chip" id="extension-length-chip"><rect x="509" y="245" width="40" height="20" rx="3"/><text id="demo-extension-label" x="529" y="259" text-anchor="middle">5m</text></g>
+          <g id="demo-junction" transform="translate(491.5 276)"><circle class="junction-outer" r="6"/><circle class="junction-inner" r="2"/></g>
+          <g class="demo-cursor" transform="translate(420 171)"><path d="m0 0 19 17-10 1-4 9Z"/><rect x="12" y="23" width="42" height="20" rx="3"/><text x="33" y="37" text-anchor="middle">Mika</text></g>
+          <g class="small-cable-chip"><rect x="217" y="244" width="43" height="20" rx="3"/><text x="238.5" y="258" text-anchor="middle">1.5m</text></g>
+        </svg>
+      </div>
+      <div class="preview-controls"><div><span class="demo-index">01</span><span>延長区間</span><div class="demo-options" role="group" aria-label="配線デモの延長ケーブルの長さ"><button type="button" data-demo-length="3" aria-pressed="false">3m</button><button type="button" data-demo-length="5" aria-pressed="true">5m</button><button type="button" data-demo-length="10" aria-pressed="false">10m</button></div></div><output id="demo-total" aria-live="polite"><span>3m + 5m</span><strong>合計 8m</strong></output></div>
+      <p class="preview-note">長さを切り替えてみて。区間と中継点を分けて管理できます。<a href="editor.html">実際に配線する <span aria-hidden="true">↗</span></a></p>
+    </div>
+  </section>
+  <div class="capabilities-strip section-shell" aria-label="対応機能"><span><b>96</b> EQUIPMENT MODELS</span><span>RCA / XLR / TRS / speakON</span><span>HDMI / SDI / USB</span><span>PNG / PDF / SVG</span></div>
+  <section id="workflow" class="feature-section section-shell">
+    <div class="section-intro"><p class="eyebrow">01 / DESIGN THE SIGNAL</p><h2>端子から考える。<br>現場で迷わない。</h2><p>見た目だけの線ではなく、機材の入出力をつなぐ。<br>構成を変えるときも、必要な情報が図に残る。</p></div>
+    <div class="feature-grid">
+      <article class="feature-card"><span class="feature-number">01—A</span><svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="8" width="15" height="30" rx="2"/><rect x="29" y="8" width="15" height="30" rx="2"/><path d="M19 18h10M19 28h10M8 13h7M33 13h7"/><circle cx="19" cy="18" r="2.5"/><circle cx="29" cy="18" r="2.5"/></svg><h3>実機の端子で組む。</h3><p>DJ・PA・配信機材を種類とブランドで検索。入力数、端子、信号形式を確認しながらつなげます。</p><small>PHYSICAL PORTS / SIGNAL TYPES</small></article>
+      <article class="feature-card"><span class="feature-number">01—B</span><svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 24h42M9 15v18M39 15v18"/><circle cx="24" cy="24" r="5"/><rect x="10" y="4" width="11" height="10" rx="2"/><rect x="28" y="4" width="11" height="10" rx="2"/><path d="M14 9h3M32 9h3"/></svg><h3>長さも、中継も、メモも。</h3><p>ケーブルを選んでメートル数とコメントを入力。延長分は別の区間になり、図とケーブルリストに反映されます。</p><small>SERIAL EXTENSIONS / CABLE NOTES</small></article>
+      <article class="feature-card"><span class="feature-number">01—C</span><svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="14" height="13" rx="2"/><rect x="30" y="6" width="14" height="13" rx="2"/><rect x="17" y="30" width="14" height="13" rx="2"/><path d="M11 19v5h26v-5M24 24v6"/></svg><h3>音と映像を、一つに。</h3><p>音響・映像の表示を切り替えながら設計。ブース単位の移動、自動整理、配線を保った機材交換に対応します。</p><small>AUDIO + VIDEO / ONE WORKSPACE</small></article>
+    </div>
+  </section>
+  <section id="workspace" class="workspace-section section-shell">
+    <div class="workspace-art" aria-hidden="true"><div class="workspace-art-top"><span>YOUR WORKSPACE</span><span class="live-dot"></span></div><div class="mini-project"><span class="project-swatch">01</span><div><strong>Live Session — Main PA</strong><small>音響 / 映像　・　自動保存</small></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v11M8 10l4 4 4-4M5 17v4h14v-4"/></svg></div><div class="mini-project"><span class="project-swatch">02</span><div><strong>DJ Booth — 6 Decks</strong><small>機材と配線を、プロジェクトごとに。</small></div><span class="project-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span></div><div class="mini-project"><span class="project-swatch">03</span><div><strong>Streaming — Studio A</strong><small>編集リンクで、チームと作業。</small></div><span class="mini-avatars"><b>K</b><b>M</b></span></div><div class="workspace-art-bottom"><span>ONE LINK. SAME PROJECT.</span><span aria-hidden="true">↗</span></div></div>
+    <div class="workspace-copy"><p class="eyebrow">02 / KEEP THE TEAM IN PATCH</p><h2>作業の続きも、<br>共有する相手も。</h2><p>ログインして、自分のプロジェクトをまとめて管理。<br>一人で準備して、必要なタイミングでチームへ渡せます。</p><ul class="workspace-features"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span><b>自分のクラウドに保存</b><small>アカウントのプロジェクトは非公開で作成。</small></span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span><b>閲覧と編集、二つのリンク</b><small>固定の閲覧URLはリロードで最新に。編集リンクでは相手のカーソルと選択を表示。</small></span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span><b>図面として、そのまま渡す</b><small>選択中のテーマでPNG・PDF・SVGに書き出せます。</small></span></li></ul><a class="button button-outline" href="https://patchflow-audio-matsunaga.matsunagakoki.chatgpt.site/account.html">ChatGPTでログインして始める <span aria-hidden="true">↗</span></a><p class="sso-note">ChatGPTのアカウントを使ってログイン。PATCHFLOWでパスワードを預かりません。</p></div>
+  </section>
+  <section id="start" class="steps-section section-shell"><div class="steps-heading"><p class="eyebrow">03 / START PATCHING</p><h2>置く。つなぐ。渡す。</h2><p>まずはゲストでキャンバスを開いてみよう。</p></div><ol class="steps"><li><span>01</span><div><h3>機材を置く</h3><p>ライブラリから追加。<br>ドラッグでブースへ配置。</p><kbd>A</kbd><small>ライブラリ</small></div></li><li><span>02</span><div><h3>出力から入力へ</h3><p>端子を順に選んで接続。<br>ケーブルに長さとメモを。</p><kbd>F</kbd><small>全体を表示</small></div></li><li><span>03</span><div><h3>チームへ渡す</h3><p>リンクで同時編集・閲覧。<br>図面とケーブルリストを出力。</p><kbd>⌘ K</kbd><small>操作を検索</small></div></li></ol></section>
+  <section class="closing-section section-shell"><div><p class="eyebrow">READY FOR YOUR NEXT SESSION?</p><h2>次の現場を、<br>ここからつなごう。</h2></div><div class="closing-actions"><a class="button button-primary button-large" href="editor.html">配線キャンバスを開く <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><span>ゲストで開始 / ブラウザに自動保存</span></div></section>
+</main>
+<footer class="home-footer section-shell"><a class="footer-wordmark" href="./">patchflow<span>signal design studio</span></a><p>実機の電源・内部設定・伝送条件は現場で確認してください。<br>キャンバスの光は信号方向の演出です。</p><div><a href="editor.html">スタジオ ↗</a><a href="https://patchflow-audio-matsunaga.matsunagakoki.chatgpt.site/account.html">ワークスペース ↗</a><small>AUDIO / VIDEO · PATCHFLOW STUDIO</small></div></footer>
+</body>
+</html>

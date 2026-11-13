@@ -65,7 +65,7 @@ function mergeProjectIntoCanvas(incoming){
  next.canvas={width:Math.max(next.canvas.width,...next.nodes.map(n=>n.x+260),...next.groups.map(g=>g.x+g.w+30)),height:Math.max(next.canvas.height,src.canvas?.height||3200)};next.layers={audio:true,video:true};validate(next);return next;
 }
 function initializeAVWorkspace(){
- document.body.classList.remove('video-mode');document.body.classList.add('av-mode');document.title='PATCHFLOW | 音響・映像 配線エディター';$('.version').textContent='v1.1 · STUDIO';
+ document.body.classList.remove('video-mode');document.body.classList.add('av-mode');document.title='PATCHFLOW | 音響・映像 配線エディター';$('.version').textContent='v1.2 · STUDIO';
  for(let layer of ['audio','video'])$('[data-layer="'+layer+'"]').onclick=()=>setMediaLayer(layer,layers()[layer]===false);
  $('#sixpreset').textContent='6DJ構成';$('#videopreset').onclick=()=>{remember();state=videoDemo();selected='switch';selectedEdge=null;render();fitCanvas()};
  $('#emptycanvas h2').textContent='音も、映像も、ここからつなごう。';if($('.future'))$('.future').innerHTML='▧ <div>AUDIO + VIDEO<small>一つのキャンバスで、すべての経路を。</small></div>';
