@@ -246,3 +246,13 @@ GitHub Pagesは静的フロントエンド。共有APIは既存SitesのWorker+D1
 - Local QA: `npm run preview` on Node 24 serves the real Worker against an isolated in-memory SQLite database at http://127.0.0.1:4173. Restarting discards local test rooms. The production app continues using the Sites Worker+D1 backend.
 
 Validation includes the existing equipment/connection/migration/sharing tests, authenticated presence/expiry/leave and document revision isolation in `test-collaboration.cjs`, and origin-centred fit, zoom anchoring, library close and command search in `test-studio.cjs`.
+
+## v1.1 — Cable lengths, comments and serial extensions
+
+Select a cable, its length badge or an inline junction to edit lengths and per-segment comments directly on the canvas. Each edit autosaves. “＋ 延長” appends a 3m segment whose length/comment can be changed; extensions can be removed and restored with Undo. Length badges appear above each section, with junction markers placed proportionally along the route. Comments are available from the badge tooltip and the cable list.
+
+The connection continues to occupy one physical input/output pair. `edge.length` is the total route length; optional `edge.segments` stores 1–12 serial cable lengths and comments (120 characters each). Old files without segments remain single cables. Lengths must be positive and the total at most 1000m. The list, counts and CSV enumerate separate physical segments, including comments and route total. Adapter routes retain the adapter as the first segment and use the destination-side connector family for later segments. This is a wiring plan; select actual inline connectors/transport hardware for the equipment in use.
+
+JSON autosave/import, room autosave, live read-only links, replacement/reconnection, and SVG/PNG/PDF output retain the lengths and comments. Server and viewer validation reject invalid segment metadata or inconsistent totals. The current camera centre format is also accepted on JSON reload. Existing legacy snapshot links continue to work.
+
+Validation: `test-cable-extensions.cjs` covers editing, extension removal/Undo, physical counts, unchanged endpoint occupancy, invalid input, escaping, route geometry, snapshot/export markup and saved reload. `test-collaboration.cjs` covers persisted extended routes and public read projection, live updates and invalid extension data.

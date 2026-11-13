@@ -15,7 +15,7 @@ window.HTMLElement.prototype.showModal=function(){this.open=true;this.setAttribu
 window.HTMLElement.prototype.close=function(){this.open=false;this.removeAttribute('open');this.dispatchEvent(new window.Event('close'))};
 const localStorage={getItem:k=>shared.get(k)||null,setItem:(k,v)=>shared.set(k,v),removeItem:k=>shared.delete(k)};
 const ctx=vm.createContext({document,window,location:{search:mode==='video'?'?mode=video':'?mode=audio'},localStorage,console,URLSearchParams,structuredClone,requestAnimationFrame:cb=>{frames.push(cb)},setTimeout:()=>1,clearTimeout(){},Blob,URL,fetch:async()=>({json:async()=>JSON.parse(fs.readFileSync(root+'/presets/six-deck.json'))})});
-for(const f of ['cables.js','projects.js','replacement.js','video-models.js','booths.js','app.js'])vm.runInContext(fs.readFileSync(root+'/'+f,'utf8'),ctx,{filename:f});
+for(const f of ['cable-segments.js','cable-editor.js','cables.js','projects.js','replacement.js','video-models.js','booths.js','app.js'])vm.runInContext(fs.readFileSync(root+'/'+f,'utf8'),ctx,{filename:f});
 function flush(){let run=frames;frames=[];for(let f of run)f()}
 flush();return {ctx,document,flush,run:c=>vm.runInContext(c,ctx),click:selector=>{let el=document.querySelector(selector);assert.ok(el,selector);el.click();flush()},change:(selector,value)=>{let el=document.querySelector(selector);assert.ok(el,selector);el.value=value;el.dispatchEvent(new window.Event('change'));flush()}};
 }
