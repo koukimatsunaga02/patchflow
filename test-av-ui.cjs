@@ -3,7 +3,7 @@ const {parseHTML}=require('linkedom'),fs=require('node:fs'),vm=require('node:vm'
 const root=require('node:path').join(__dirname,'dist');
 const shared=new Map();
 function boot(mode){
-const {window,document}=parseHTML(fs.readFileSync(root+'/index.html','utf8'));let frames=[];
+const {window,document}=parseHTML(fs.readFileSync(root+'/editor.html','utf8'));let frames=[];
 Object.defineProperty(document,'activeElement',{get:()=>document.body});
 for(const axis of ['scrollLeft','scrollTop'])Object.defineProperty(window.HTMLElement.prototype,axis,{configurable:true,get(){return this['_'+axis]||0},set(v){this['_'+axis]=Math.max(0,Number(v)||0)}});
 Object.defineProperty(window.HTMLElement.prototype,'offsetHeight',{configurable:true,get(){return this.id==='canvaswrap'?650:350}});
