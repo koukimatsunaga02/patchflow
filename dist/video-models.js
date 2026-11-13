@@ -13,7 +13,7 @@ function initializeVideoWorkspace(){
  document.title='PATCHFLOW | 映像配線エディター';document.querySelector('.version').textContent='v0.8 · VIDEO';
  document.querySelector('#sixpreset').textContent='映像デモ';document.querySelector('#sixpreset').onclick=()=>{remember();state=demo();selected='switch';selectedEdge=null;pending=null;rewire=null;insertDraft=null;render();fitCanvas();toast('映像デモを配置しました（↶で戻せます）')};
  document.querySelector('#emptycanvas h2').textContent='ここから、映像をつなごう。';
- document.querySelector('.future').innerHTML='▧ <div>VIDEO WORKSPACE<small>HDMI / Micro HDMI / SDI / USB映像</small></div>';
+ if(document.querySelector('.future'))document.querySelector('.future').innerHTML='▧ <div>VIDEO WORKSPACE<small>HDMI / Micro HDMI / SDI / USB映像</small></div>';
  document.querySelector('#modelscope').textContent='映像ケーブルを選択すると、詳細で解像度・フレームレートを設定できます。';
  document.querySelector('#domainlegend').innerHTML='HDMI <i class="legend" style="background:#68baf0"></i> SDI <i class="legend" style="background:#c19bf4"></i> USB映像 <i class="legend" style="background:#78dbce"></i>';
 }

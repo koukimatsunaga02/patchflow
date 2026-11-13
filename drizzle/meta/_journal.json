@@ -8,6 +8,20 @@
       "when": 1794390412170,
       "tag": "0000_clean_iron_monger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794566493785,
+      "tag": "0001_silent_purple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794567024820,
+      "tag": "0002_shiny_nemesis",
+      "breakpoints": true
     }
   ]
 }

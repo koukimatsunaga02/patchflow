@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{DatabaseSync}=require('node:sqlite');
 const {sharedProject,projectChanges,mergeProjectChanges}=require('./dist/collab-core.js');
-(async()=>{const db=new DatabaseSync(':memory:');for(let f of fs.readdirSync('drizzle').filter(f=>f.endsWith('.sql')))db.exec(fs.readFileSync('drizzle/'+f,'utf8'));let env={DB:{prepare(sql){return {bind(...args){return {first:async()=>{await Promise.resolve();return db.prepare(sql).get(...args)||null},run:async()=>{await Promise.resolve();return {meta:{changes:db.prepare(sql).run(...args).changes}}}}}}}}};
+(async()=>{const db=new DatabaseSync(':memory:');for(let f of fs.readdirSync('drizzle').filter(f=>f.endsWith('.sql')))db.exec(fs.readFileSync('drizzle/'+f,'utf8'));let env={DB:{prepare(sql){return {bind(...args){return {first:async()=>{await Promise.resolve();return db.prepare(sql).get(...args)||null},all:async()=>({results:db.prepare(sql).all(...args)}),run:async()=>{await Promise.resolve();return {meta:{changes:db.prepare(sql).run(...args).changes}}}}}}}}};
 let worker=(await import('./dist/server/index.js?test='+Date.now())).default;
 let project={version:1,title:'共同編集テスト',canvas:{width:4800,height:3200},nodes:[{id:'mic',model:'generic_mic',name:'MIC',x:50,y:100},{id:'rec',model:'generic_recorder',name:'REC',x:500,y:100}],edges:[],groups:[]};
 let call=(path,method='GET',body,token,origin='https://koukimatsunaga02.github.io')=>worker.fetch(new Request('https://api.example/api'+path,{method,headers:{Origin:origin,...(token?{Authorization:'Bearer '+token}:{}),...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined}),env);
@@ -11,5 +11,17 @@ let moved=structuredClone(saved.data);moved.title='次のセッション';assert
 let malformed=structuredClone(project);malformed.nodes[0].x=Infinity;assert.equal((await call('/rooms','POST',{data:malformed})).status,400);
 let readView=await call('/projects/'+room.id);assert.equal(readView.status,200);let view=await readView.json();assert.equal(view.snapshot.title,'次のセッション');assert.equal(view.snapshot.nodes.length,2);assert.equal(view.token,undefined);assert.equal((await call('/projects/'+room.id,'PATCH',{ops:[]})).status,404);
 let dbText=db.prepare('SELECT edit_hash FROM rooms WHERE id=?').get(room.id);assert.notEqual(dbText.edit_hash,room.token);assert.equal(dbText.edit_hash.length,64);
-console.log('PASS: D1 migration, room creation/token hashing, CORS/auth rejection, concurrent independent edits with CAS retry, no deleted-node resurrection and persistent reads');
+
+let peer={clientId:'c'.repeat(24),name:'参加者 A',color:'#317fbd',cursor:{x:150,y:200},selection:{type:'node',id:'mic'}};
+assert.equal((await call('/rooms/'+room.id+'/presence','POST',peer)).status,401);
+let pres=await call('/rooms/'+room.id+'/presence','POST',peer,room.token);assert.equal(pres.status,200);assert.equal((await pres.json()).participants[0].name,'参加者 A');
+let peer2={...peer,clientId:'d'.repeat(24),selection:{type:'edge',id:'e1'}};await call('/rooms/'+room.id+'/presence','POST',peer2,room.token);
+assert.equal((await(await call('/rooms/'+room.id+'/presence','GET',null,room.token)).json()).participants.length,2);
+let revision=(await(await call('/rooms/'+room.id,'GET',null,room.token)).json()).revision;assert.equal(revision,4,'presence never changes document revisions');
+assert.equal((await call('/rooms/'+room.id+'/presence','POST',{...peer,cursor:{x:-1,y:0}},room.token)).status,400);
+db.prepare('UPDATE presence SET updated_at = ? WHERE client_id = ?').run(Date.now()-25000,peer.clientId);
+let current=await(await call('/rooms/'+room.id+'/presence','GET',null,room.token)).json();assert.equal(current.participants.length,1,'stale peers disappear');
+await call('/rooms/'+room.id+'/presence','DELETE',{clientId:peer2.clientId},room.token);assert.equal((await(await call('/rooms/'+room.id+'/presence','GET',null,room.token)).json()).participants.length,0);
+assert.equal((await call('/projects/'+room.id+'/presence')).status,404,'view link cannot read editor presence');
+console.log('PASS: authenticated transient presence, expiry/leave, unchanged revisions; D1 migration, room creation/token hashing, CORS/auth rejection, concurrent independent edits with CAS retry, no deleted-node resurrection and persistent reads');
 })().catch(e=>{console.error(e);process.exitCode=1});

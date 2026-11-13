@@ -1,0 +1,1 @@
+CREATE INDEX `presence_room_updated` ON `presence` (`room_id`,`updated_at`);

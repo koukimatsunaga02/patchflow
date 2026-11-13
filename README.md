@@ -235,3 +235,14 @@ iPadの縦横表示向けにヘッダー/ツールバーを折り返し、操作
 - 編集元はブラウザにも自動保存。共有作成後はD1にも差分を保存し、再読み込み/再接続時に保存先を復元。プロジェクト切り替え時は共有セッションを切り替え、無関係な構成を送信しません。
 
 GitHub Pagesは静的フロントエンド。共有APIは既存SitesのWorker+D1を使用し、API以外の旧URLはGitHub Pagesの同じアプリを配信。D1マイグレーションはdrizzle/。開発では npm install / npm run db:generate / npm run build:collab。APIテストは Node 24のnode:sqliteを使用。
+
+## v1.0 — Studio UI and collaborative presence
+
+- Neutral warm gray / charcoal surfaces, orange action colour, a single SVG icon set, revised type hierarchy, concise equipment rows, and two-column photo cards. Desktop/tablet toolbars keep diagram actions visible; templates and file tools live in the project menu. Light/dark appearance carries through the viewer and PNG/PDF/SVG output.
+- The library has a sticky search/filter/view header and an explicit, always-reachable close icon. Type/brand filters, grouping order, grid/table views, reset filters and Escape remain available. A command palette (⌘/Ctrl+K) provides searchable actions; F fits the diagram, A toggles equipment, I toggles details, V/H choose select/pan.
+- Canvas padding permits visual centring even when equipment sits at world coordinates near zero. Startup, project changes and automatic arrangement centre the content; fitting also respects an open library/details drawer. Zoom and two-finger gestures preserve the point underneath the gesture. Old camera snapshots are refitted once, then saved with camera version 2. Opening/closing a drawer keeps the same work area in view.
+- Editing rooms show participant avatars, editable display names, coloured cursors and remote selections for equipment, cables, booths and pending ports. Avatar buttons move to a collaborator’s work area. Presence is separate from document data/Undo and expires after 16 seconds without heartbeat; leaving/hiding a tab removes it immediately when network is available. Cursor updates are throttled (~350ms during pointer activity, 1s heartbeat). Foreground network and browser scheduling determine latency.
+- Presence uses an authenticated D1 endpoint and an indexed ephemeral table. Read-only project URLs cannot access editor presence. Expired room presence is pruned on heartbeat; tokens remain hashed in the rooms table. Project changes continue using the existing field-diff merge and autosave. Remote render is deferred during active typing or a connection gesture so it cannot replace an active text field.
+- Local QA: `npm run preview` on Node 24 serves the real Worker against an isolated in-memory SQLite database at http://127.0.0.1:4173. Restarting discards local test rooms. The production app continues using the Sites Worker+D1 backend.
+
+Validation includes the existing equipment/connection/migration/sharing tests, authenticated presence/expiry/leave and document revision isolation in `test-collaboration.cjs`, and origin-centred fit, zoom anchoring, library close and command search in `test-studio.cjs`.
