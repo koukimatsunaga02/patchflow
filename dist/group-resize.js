@@ -1,10 +1,10 @@
 'use strict';
 function resizedGroupRect(g,edge,dx,dy,canvas,rects=[]){
  let left=g.x,top=g.y,right=g.x+g.w,bottom=g.y+g.h;
- let minMemberX=Math.min(canvas.width,...rects.map(r=>Math.max(0,r.x-28))),minMemberY=Math.min(canvas.height,...rects.map(r=>Math.max(0,r.y-82)));
- let maxMemberX=Math.max(0,...rects.map(r=>Math.min(canvas.width,r.x+r.w+28))),maxMemberY=Math.max(0,...rects.map(r=>Math.min(canvas.height,r.y+r.h+28)));
- if(edge.includes('w'))left=Math.max(0,Math.min(g.x+dx,right-240,minMemberX));
- if(edge.includes('n'))top=Math.max(0,Math.min(g.y+dy,bottom-180,minMemberY));
+ let minMemberX=Math.min(canvas.width,...rects.map(r=>Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,r.x-28))),minMemberY=Math.min(canvas.height,...rects.map(r=>Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,r.y-82)));
+ let maxMemberX=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,...rects.map(r=>Math.min(canvas.width,r.x+r.w+28))),maxMemberY=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,...rects.map(r=>Math.min(canvas.height,r.y+r.h+28)));
+ if(edge.includes('w'))left=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,Math.min(g.x+dx,right-240,minMemberX));
+ if(edge.includes('n'))top=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,Math.min(g.y+dy,bottom-180,minMemberY));
  if(edge.includes('e'))right=Math.min(canvas.width,Math.max(g.x+g.w+dx,left+240,maxMemberX));
  if(edge.includes('s'))bottom=Math.min(canvas.height,Math.max(g.y+g.h+dy,top+180,maxMemberY));
  return{x:left,y:top,w:right-left,h:bottom-top};

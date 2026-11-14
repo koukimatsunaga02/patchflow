@@ -325,6 +325,17 @@ const { projectChanges } = require('./dist/collab-core.js');
   assert.equal((await staleShare).status, 409, 'stale sharing cannot override revocation');
   assert.equal(row(duplicate.id).visibility, 'private');
 
+  // Free canvas coordinates must survive authenticated cloud saves and public projections.
+  const wide = fresh('Wide workspace');
+  wide.canvas = { width: 100000, height: 100000 };
+  wide.nodes[0].x = -1500; wide.nodes[0].y = -800;
+  wide.nodes[1].x = 45000; wide.nodes[1].y = 30000;
+  const wideResult = await json('/api/account/projects', { method: 'POST', user: alice, body: { data: wide } });
+  assert.equal(wideResult.response.status, 201);
+  assert.equal(wideResult.data.data.nodes[0].x, -1500);
+  wide.nodes[0].x = -20001;
+  assert.equal((await request('/api/account/projects', { method: 'POST', user: alice, body: { data: wide } })).status, 400);
+
   console.log('PASS: Sites identity/native SSO URLs, account CSRF and origin checks, private ownership/isolation, encrypted stable edit links, revocation/presence cleanup, validated autosave, private duplicates/trash/restore, atomic private-transfer claims and missing-secret rollback');
 })().catch(error => {
   console.error(error);
