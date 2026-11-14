@@ -4,7 +4,7 @@ let boothResizeObserver=null;
 function insideRect(x,y,r,margin=0){return x>=r.left-margin&&x<=r.left+r.width+margin&&y>=r.top-margin&&y<=r.top+r.height+margin}
 function fitBoothRect(group,rects,canvas){
  if(!rects.length)return{x:group.x,y:group.y,w:group.w,h:group.h};
- let x=Math.max(0,Math.min(group.x,...rects.map(r=>r.x-28))),y=Math.max(0,Math.min(group.y,...rects.map(r=>r.y-82)));
+ let x=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,Math.min(group.x,...rects.map(r=>r.x-28))),y=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():0,Math.min(group.y,...rects.map(r=>r.y-82)));
  let right=Math.min(canvas.width,Math.max(group.x+group.w,...rects.map(r=>r.x+r.w+28))),bottom=Math.min(canvas.height,Math.max(group.y+group.h,...rects.map(r=>r.y+r.h+28)));
  return{x,y,w:right-x,h:bottom-y};
 }
@@ -16,7 +16,7 @@ function equipmentRect(n){let el=$(`.node[data-id="${n.id}"]`);return{x:n.x,y:n.
 function boothMemberRects(group,except,visibleOnly=false){return state.nodes.filter(n=>n.group===group.id&&n.id!==except&&(!visibleOnly||typeof visibleNode!=='function'||visibleNode(n))).map(equipmentRect)}
 function paintBooth(group,rect=group){let el=$(`.zone[data-group="${group.id}"]`);if(el)Object.assign(el.style,{left:rect.x+'px',top:rect.y+'px',width:rect.w+'px',height:rect.h+'px'})}
 function fitAllBooths(){
- if(activeEquipmentDrag)return false;let changed=false;
+ if(activeEquipmentDrag||typeof autoFitBooths!=='undefined'&&!autoFitBooths)return false;let changed=false;
  for(let g of state.groups){let r=fitBoothRect(g,boothMemberRects(g,null,true),canvasSize());if(['x','y','w','h'].some(k=>g[k]!==r[k])){Object.assign(g,r);changed=true}paintBooth(g)}
  return changed;
 }
@@ -41,7 +41,7 @@ function removeEquipment(id,record=true){
  selected=state.nodes[0]?.id;selectedEdge=null;selectedGroup=null;pending=null;rewire=null;insertDraft=null;render();toast(label+' と接続ケーブルを削除しました（↶で戻せます）');return true;
 }
 function startEquipmentPointer(e,element,options){
- if(e.button!==0||activeEquipmentDrag)return;
+ if(e.button!==0||e.ctrlKey||activeEquipmentDrag)return;
  let original=JSON.stringify(state),oldHistory=history.slice(),start={x:e.clientX,y:e.clientY};
  let n=options.id?node(options.id):null,grab=n?{x:canvasDropPoint(e).x-n.x,y:canvasDropPoint(e).y-n.y}:null,started=false,ghost=null,last=e;
  let controller={cancel:()=>finish(last,true)};activeEquipmentDrag=controller;
@@ -59,7 +59,7 @@ function startEquipmentPointer(e,element,options){
   if(!started&&Math.hypot(ev.clientX-start.x,ev.clientY-start.y)<6)return;
   ev.preventDefault();if(!started)begin();
   let p=canvasDropPoint(ev);n.x=p.x-(options.id?grab.x:107);n.y=p.y-(options.id?grab.y:30);
-  let h=n.dragHeight||equipmentRect(n).h;n.x=Math.max(10,Math.min(canvasSize().width-243,n.x));n.y=Math.max(82,Math.min(canvasSize().height-h-28,n.y));
+  let h=n.dragHeight||equipmentRect(n).h;n.x=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():10,Math.min(canvasSize().width-243,n.x));n.y=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():82,Math.min(canvasSize().height-h-28,n.y));
   if(options.id){let el=$(`.node[data-id="${n.id}"]`);el.style.left=n.x+'px';el.style.top=n.y+'px';wires()}else Object.assign(ghost.style,{left:ev.clientX+18+'px',top:ev.clientY+18+'px'});
   previewEquipmentDrop(n,ev);
  }
@@ -74,7 +74,7 @@ function startEquipmentPointer(e,element,options){
   if(cancelled||!outcome.inCanvas&&!outcome.trash||!options.id&&outcome.trash){state=JSON.parse(original);history=oldHistory;render();if(cancelled)toast('移動を中止しました');return}
   if(outcome.trash){removeEquipment(n.id,false);return}
   delete n.dragHeight;n.group=outcome.group;if(!options.id){if(typeof revealModel==='function')revealModel(n.model);state.nodes.push(n);}selected=n.id;render();
-  let group=state.groups.find(g=>g.id===n.group);toast(group?'「'+group.name+'」に追加しました（↶で戻せます）':'グループなしで配置しました（↶で戻せます）');
+  let group=state.groups.find(g=>g.id===n.group);if(group){Object.assign(group,fitBoothRect(group,boothMemberRects(group),canvasSize()));paintBooth(group);save()}toast(group?'「'+group.name+'」に追加しました（↶で戻せます）':'グループなしで配置しました（↶で戻せます）');
  }
  function up(ev){finish(ev)}function cancel(ev){if(ev?.pointerId!==undefined&&ev.pointerId!==e.pointerId)return;finish(last,true)}
  function key(ev){if(ev.key==='Escape'||(ev.ctrlKey||ev.metaKey)&&ev.key.toLowerCase()==='z'){ev.preventDefault();ev.stopImmediatePropagation();cancel()}else if(started&&['Enter','Delete','Backspace',' '].includes(ev.key)){ev.preventDefault();ev.stopImmediatePropagation()}}
