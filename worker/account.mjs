@@ -12,6 +12,7 @@ async function handleAccount(request,env){let url=new URL(request.url),origin=re
  try{
   if(url.pathname==='/api/account'&&request.method==='GET')return accountReply({user,signInUrl:ACCOUNT_SIGNIN,signOutUrl:ACCOUNT_SIGNOUT,provider:'chatgpt'});
   if(!user)return accountReply({error:'ログインしてください',signInUrl:ACCOUNT_SIGNIN},401);if(!env.DB)return accountReply({error:'保存先を準備中です'},503);
+  if(url.pathname==='/api/account/compose'&&request.method==='POST')return await composeProject(request,env);
   if(url.pathname==='/api/account/projects'){
    if(request.method==='GET'){let archived=url.searchParams.get('trash')==='1',r=await env.DB.prepare('SELECT * FROM rooms WHERE owner_id = ? AND archived_at IS '+(archived?'NOT NULL':'NULL')+' ORDER BY updated_at DESC LIMIT 200').bind(user.id).all();return accountReply({projects:r.results.map(accountProjectMeta)})}
    if(request.method==='POST'){let body=await accountBody(request),data=body.data||{version:1,title:typeof body.title==='string'?body.title.trim().slice(0,100)||'新しいプロジェクト':'新しいプロジェクト',canvas:{width:4800,height:3200},nodes:[],edges:[],groups:[],presentation:{theme:'light'}};return accountReply(await createAccountProject(env,user,data),201)}
