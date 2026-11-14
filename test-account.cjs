@@ -325,6 +325,11 @@ const { projectChanges } = require('./dist/collab-core.js');
   assert.equal((await staleShare).status, 409, 'stale sharing cannot override revocation');
   assert.equal(row(duplicate.id).visibility, 'private');
 
+  const genericAudio = {version:1,title:'Generic audio sources',canvas:{width:4800,height:3200},groups:[],nodes:[{id:'wireless',model:'generic_wireless_mic',name:'Wireless',x:100,y:100},{id:'cd',model:'generic_cd_deck',name:'CD',x:100,y:600},{id:'mixer',model:'mg10',name:'Mixer',x:600,y:100}],edges:[{id:'mic',from:'wireless',fp:'out',to:'mixer',tp:'in1',type:'XLR',length:3},{id:'cdl',from:'cd',fp:'lineL',to:'mixer',tp:'rca56L',type:'RCA',length:1.5},{id:'cdr',from:'cd',fp:'lineR',to:'mixer',tp:'rca56R',type:'RCA',length:1.5}]};
+  const genericResult = await json('/api/account/projects', {method:'POST',user:alice,body:{data:genericAudio}});
+  assert.equal(genericResult.response.status,201,'generic wireless and CD routes can be saved to the cloud');
+  assert.equal(genericResult.data.data.edges.length,3);
+
   // Free canvas coordinates must survive authenticated cloud saves and public projections.
   const wide = fresh('Wide workspace');
   wide.canvas = { width: 100000, height: 100000 };

@@ -1,6 +1,6 @@
 const {boot,shared,assert}=require('./test-av-ui.cjs');shared.clear();let app=boot('audio'),run=app.run;
-assert.equal(run('Object.keys(models).length'),96);
-app.change('#categoryfilter','interface');assert.equal(app.document.querySelectorAll('[data-add]').length,2);app.change('#categoryfilter','all');app.change('#brandfilter','汎用');assert.equal(app.document.querySelectorAll('[data-add]').length,3);app.change('#brandfilter','all');
+assert.equal(run('Object.keys(models).length'),98);
+app.change('#categoryfilter','interface');assert.equal(app.document.querySelectorAll('[data-add]').length,2);app.change('#categoryfilter','all');app.change('#brandfilter','汎用');assert.equal(app.document.querySelectorAll('[data-add]').length,5);app.change('#brandfilter','all');
 app.document.querySelector('#search').value='MG16/6FX';app.document.querySelector('#search').dispatchEvent(new app.document.defaultView.Event('input'));assert.equal(app.document.querySelectorAll('[data-add]').length,1);
 assert.equal(run("models.mg166fx.ports.filter(p=>p.dir==='in'&&p.type==='XLR').length"),10);
 assert.equal(run("models.mg166fx.ports.filter(p=>p.dir==='in').length"),34);

@@ -1,6 +1,6 @@
 const {boot,shared,assert,fs,root}=require('./test-av-ui.cjs');shared.clear();let app=boot('audio');
 const run=app.run;
-assert.equal(run('Object.keys(models).length'),96);
+assert.equal(run('Object.keys(models).length'),98);
 for(let c of ['ptzCamera','ptzController','splitter']){app.change('#categoryfilter',c);assert.equal(app.document.querySelectorAll('[data-add]').length,c==='splitter'?1:4)}
 app.change('#categoryfilter','all');app.change('#brandfilter','Roland');assert.equal(app.document.querySelectorAll('[data-add]').length,6);
 for(let [cam,ctl] of [['canon','canonctl'],['sony','sonyctl'],['pana','panactl'],['jvc','jvcctl']]){
