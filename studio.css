@@ -58,3 +58,11 @@ html .studio #routeeditor{width:min(540px,calc(100% - 24px));max-width:calc(100%
 .cable-junction circle{pointer-events:all}
 
 html .studio #cloudbutton.cloud-connected{border-color:var(--orange);color:var(--orange)}@media(max-width:1050px){html .studio #cloudbutton>span{display:none}html .studio #cloudbutton{width:36px;min-width:36px;padding:7px}}
+/* Invisible resize hit targets; visual outline stays one pixel. */
+html .studio .zone .group-resize{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;min-width:0;min-height:0;opacity:1}
+html .studio .zone .group-resize-n,html .studio .zone .group-resize-s{height:10px}html .studio .zone .group-resize-e,html .studio .zone .group-resize-w{width:10px}
+html .studio .zone .group-resize-ne,html .studio .zone .group-resize-nw,html .studio .zone .group-resize-se,html .studio .zone .group-resize-sw{width:14px;height:14px}
+html .studio .zone{border-width:1px!important;box-shadow:none!important}html .studio #focusmode{display:none!important}
+html .studio.canvas-focus main{height:100dvh;height:100vh}html .studio.canvas-focus #canvastools{min-height:44px;padding:5px 10px;flex-wrap:wrap}html .studio.canvas-focus .canvasnavigation{margin:0;gap:4px}
+.compose-dialog{width:min(680px,94vw);background:var(--surface);color:var(--ink);border:1px solid var(--border);padding:24px;border-radius:6px}.compose-dialog textarea{width:100%;min-height:100px;box-sizing:border-box;background:var(--bg);color:var(--ink);padding:12px;border:1px solid var(--border)}.compose-dialog button{padding:10px;margin:5px}.compose-dialog pre{white-space:pre-wrap;max-height:240px;overflow:auto;font:12px/1.8 monospace}
+html body.studio.canvas-focus>.app-header,html body.studio.canvas-focus>.app-nav,html body.studio.canvas-focus .workspacebar,html body.studio.canvas-focus footer{display:none!important}
