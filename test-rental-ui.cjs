@@ -1,4 +1,5 @@
 const {boot,shared,assert,fs,root}=require('./test-av-ui.cjs');shared.clear();let app=boot('audio');
+app.run("setDrawer('library',true)");
 const run=app.run;
 assert.equal(run('Object.keys(models).length'),98);
 for(let c of ['ptzCamera','ptzController','splitter']){app.change('#categoryfilter',c);assert.equal(app.document.querySelectorAll('[data-add]').length,c==='splitter'?1:4)}

@@ -1,15 +1,16 @@
 'use strict';
 class ProjectLibrary {
- constructor(storage,key='patchflow-project-library-v1'){this.storage=storage;this.key=key;this.value=null}
+ constructor(storage,key='patchflow-project-library-v1'){this.storage=storage;this.key=key;this.value=null;this.savedRaw=null;this.savedId=null;this.savedData=null}
  clone(v){return JSON.parse(JSON.stringify(v))}
  latest(){let raw=this.storage.getItem(this.key);if(!raw)return this.clone(this.value);let v=JSON.parse(raw);if(v.version!==1||!Array.isArray(v.projects))throw Error('保存データを読み込めません');return v}
  uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,9)}
- commit(value){this.storage.setItem(this.key,JSON.stringify(value));this.value=value;return this.active()}
- initialize(legacy){let raw=this.storage.getItem(this.key);if(raw){let v=JSON.parse(raw);if(v.version!==1||!Array.isArray(v.projects)||!v.projects.length||!v.projects.some(p=>p.id===v.activeId))throw Error('プロジェクト一覧を読み込めません');this.value=v}else{let now=new Date().toISOString(),id=this.uid();this.commit({version:1,activeId:id,projects:[{id,createdAt:now,updatedAt:now,data:this.clone(legacy)}],trash:[]})}return this.active()}
+ cacheSaved(raw){this.savedRaw=raw;this.savedId=this.value.activeId;this.savedData=JSON.stringify(this.value.projects.find(p=>p.id===this.savedId)?.data)}
+ commit(value){let raw=JSON.stringify(value);this.storage.setItem(this.key,raw);this.value=value;this.cacheSaved(raw);return this.active()}
+ initialize(legacy){let raw=this.storage.getItem(this.key);if(raw){let v=JSON.parse(raw);if(v.version!==1||!Array.isArray(v.projects)||!v.projects.length||!v.projects.some(p=>p.id===v.activeId))throw Error('プロジェクト一覧を読み込めません');this.value=v;this.cacheSaved(raw)}else{let now=new Date().toISOString(),id=this.uid();this.commit({version:1,activeId:id,projects:[{id,createdAt:now,updatedAt:now,data:this.clone(legacy)}],trash:[]})}return this.active()}
  active(){return this.clone(this.value.projects.find(p=>p.id===this.value.activeId))}
  list(){return this.clone(this.value.projects)}
  trash(){return this.clone(this.value.trash||[])}
- save(data){let v=this.latest();v.activeId=this.value.activeId;let p=v.projects.find(p=>p.id===v.activeId);if(!p)throw Error('別のタブで削除されたプロジェクトです');p.data=this.clone(data);p.updatedAt=new Date().toISOString();return this.commit(v)}
+ save(data){let serialized=JSON.stringify(data);if(this.value.activeId===this.savedId&&serialized===this.savedData&&this.storage.getItem(this.key)===this.savedRaw)return this.active();let v=this.latest();v.activeId=this.value.activeId;let p=v.projects.find(p=>p.id===v.activeId);if(!p)throw Error('別のタブで削除されたプロジェクトです');p.data=JSON.parse(serialized);p.updatedAt=new Date().toISOString();return this.commit(v)}
  activate(id){let v=this.latest();if(!v.projects.some(p=>p.id===id))throw Error('プロジェクトが見つかりません');v.activeId=id;return this.commit(v)}
  create(data){let v=this.latest(),now=new Date().toISOString(),p={id:this.uid(),createdAt:now,updatedAt:now,data:this.clone(data)};v.projects.push(p);v.activeId=p.id;return this.commit(v)}
  duplicate(id){let p=this.value.projects.find(p=>p.id===id);if(!p)throw Error('プロジェクトが見つかりません');let data=this.clone(p.data);data.title+=' のコピー';return this.create(data)}

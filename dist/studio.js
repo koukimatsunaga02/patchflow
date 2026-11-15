@@ -19,5 +19,5 @@ function initializeStudio(){
  $('#nodes').addEventListener('dblclick',e=>{let h=e.target.closest('.nodehead');if(h){selected=h.closest('.node').dataset.id;selectedEdge=null;selectedGroup=null;focusStudioSelection()}});
  // A short background click deselects without turning every pan into a click.
  let down=null;$('#canvaswrap').addEventListener('pointerdown',e=>{down=e.target.closest('.node,.zone,.wirehit,.wireend,.cable-length-label,.cable-junction')?null:{x:e.clientX,y:e.clientY}});$('#canvaswrap').addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<4){selected=null;selectedEdge=null;selectedGroup=null;pending=null;render()}down=null});
- let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{syncCanvasSize();wires();renderPresence()},120)});
+ let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{syncCanvasSize();scheduleWires();renderPresence()},120)});
 }

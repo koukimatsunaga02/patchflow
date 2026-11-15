@@ -1,4 +1,5 @@
 const {boot,shared,assert}=require('./test-av-ui.cjs');shared.clear();let app=boot('audio'),run=app.run;
+app.run("setDrawer('library',true)");
 app.change('#categoryfilter','interface');app.change('#brandfilter','Behringer');
 assert.equal(app.document.querySelectorAll('[data-add]').length,1);
 app.click('[data-add="umc202hd"]');assert.equal(run('state.nodes.at(-1).model'),'umc202hd');

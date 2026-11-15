@@ -1,4 +1,5 @@
 const {boot,shared,assert}=require('./test-av-ui.cjs');shared.clear();let app=boot('audio'),run=app.run;
+app.run("setDrawer('library',true)");
 assert.equal(run('Object.keys(models).length'),98);
 app.change('#categoryfilter','interface');assert.equal(app.document.querySelectorAll('[data-add]').length,2);app.change('#categoryfilter','all');app.change('#brandfilter','汎用');assert.equal(app.document.querySelectorAll('[data-add]').length,5);app.change('#brandfilter','all');
 app.document.querySelector('#search').value='MG16/6FX';app.document.querySelector('#search').dispatchEvent(new app.document.defaultView.Event('input'));assert.equal(app.document.querySelectorAll('[data-add]').length,1);
