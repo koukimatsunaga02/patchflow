@@ -60,7 +60,7 @@ function startEquipmentPointer(e,element,options){
   ev.preventDefault();if(!started)begin();
   let p=canvasDropPoint(ev);n.x=p.x-(options.id?grab.x:107);n.y=p.y-(options.id?grab.y:30);
   let h=n.dragHeight||equipmentRect(n).h;n.x=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():10,Math.min(canvasSize().width-243,n.x));n.y=Math.max(typeof canvasLowerBound==='function'?canvasLowerBound():82,Math.min(canvasSize().height-h-28,n.y));
-  if(options.id){let el=$(`.node[data-id="${n.id}"]`);el.style.left=n.x+'px';el.style.top=n.y+'px';wires()}else Object.assign(ghost.style,{left:ev.clientX+18+'px',top:ev.clientY+18+'px'});
+  if(options.id){let el=$(`.node[data-id="${n.id}"]`);el.style.left=n.x+'px';el.style.top=n.y+'px';scheduleWires()}else Object.assign(ghost.style,{left:ev.clientX+18+'px',top:ev.clientY+18+'px'});
   previewEquipmentDrop(n,ev);
  }
  function finish(ev,cancelled=false){

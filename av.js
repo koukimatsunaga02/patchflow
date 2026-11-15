@@ -23,7 +23,7 @@ function mediaLayer(port){return ['video','uvc','ptz_control'].includes(port.sig
 function layers(){return state.layers||{audio:true,video:true}}
 function visiblePort(p){return p.dir!=='io'&&(layers()[mediaLayer(p)]!==false||p.accept?.includes('usb_audio')&&layers().audio!==false)}
 function visibleNode(n){if(!n)return false;let m=models[n.model];return m.ports.some(visiblePort)||!m.ports.some(p=>p.dir!=='io')&&layers().audio!==false}
-function visibleEdge(e){let a=getport(e.from,e.fp),b=getport(e.to,e.tp);return a&&b&&visiblePort(a)&&visiblePort(b)&&visibleNode(node(e.from))&&visibleNode(node(e.to))}
+function visibleEdge(e,lookup=node){if(typeof lookup!=='function')lookup=node;let from=lookup(e.from),to=lookup(e.to),a=models[from?.model]?.ports.find(p=>p.id===e.fp),b=models[to?.model]?.ports.find(p=>p.id===e.tp);return a&&b&&visiblePort(a)&&visiblePort(b)&&visibleNode(from)&&visibleNode(to)}
 function setMediaLayer(layer,visible){
  if(!['audio','video'].includes(layer))return;remember();state.layers={...layers(),[layer]:visible};pending=null;rewire=null;insertDraft=null;render();catalog();
 }
@@ -42,15 +42,20 @@ function avCompatible(a,b){
 function avCableType(a,b){if(a.signal==='mic'&&b.signal==='mic'&&a.type==='XLR'&&b.type==='TRS'&&b.balancedMic)return 'XLR_MIC_TRS';if(a.signal==='ptz_control'&&b.signal==='ptz_control')return 'PTZ_LAN';if(a.type==='MINI'&&b.type==='MINI')return 'MINI';if(a.signal==='mic'&&b.signal==='mic'&&a.type==='XLR'&&b.type==='TRS'&&b.balancedMic)return null;
  if(a.signal==='line'&&b.acceptTS&&a.type==='TS'&&b.type==='TRS')return 'TS';if(a.signal==='usb_audio')return 'USB_AUDIO';if(a.signal==='line'&&b.signal==='line'&&a.type==='RCA'&&['TS','COMBO'].includes(b.type))return 'RCA_TS';return null}
 function avProjectErrors(project){return (typeof audioSharedInputErrors==='function'?audioSharedInputErrors(project):[]).concat(project.nodes.filter(n=>models[n.model].exclusiveOutputs&&project.edges.filter(e=>e.from===n.id&&models[n.model].exclusiveOutputs.includes(e.fp)).length>1).map(n=>n.name+': USB接続中の3.5mm端子は監視用です。録音出力として同時使用できません'))}
+let catalogAVKey;
 function catalogAV(){
- let q=$('#search').value.toLowerCase(),entries=Object.entries(models).filter(([k,m])=>!m.legacy&&(filter==='all'||m.category===filter)&&(brandFilter==='all'||m.maker===brandFilter)&&(m.name+' '+m.maker+' '+(m.searchTerms||'')).toLowerCase().includes(q));let groups=new Map();
+ if(!document.body.classList.contains('library-open'))return;
+ let q=$('#search').value.toLowerCase(),key=JSON.stringify([q,filter,brandFilter,groupBy,libraryView]);
+ if(catalogAVKey===key)return;
+ let entries=Object.entries(models).filter(([k,m])=>!m.legacy&&(filter==='all'||m.category===filter)&&(brandFilter==='all'||m.maker===brandFilter)&&(m.name+' '+m.maker+' '+(m.searchTerms||'')).toLowerCase().includes(q));let groups=new Map();
  for(let e of entries){let label=groupBy==='brand'?e[1].maker:categoryNames[e[1].category];if(!groups.has(label))groups.set(label,[]);groups.get(label).push(e)}
  $('#libcount').textContent=entries.length+' / '+Object.values(models).filter(m=>!m.legacy).length;$('#catalog').className='catalog-'+libraryView;
  for(let el of $$('[data-catalog-view]'))el.setAttribute('aria-pressed',String(el.dataset.catalogView===libraryView));
- if(libraryView==='table')$('#catalog').innerHTML='<table class="catalog-table"><thead><tr><th>機材</th><th>ブランド / 種類</th><th>入 / 出</th></tr></thead><tbody>'+[...groups].map(([label,es])=>`<tr class="catalog-section"><th colspan="3">${esc(label)} · ${es.length}</th></tr>`+es.map(([k,m])=>`<tr data-add="${k}" tabindex="0" title="クリックで追加・ドラッグで配置" aria-label="${esc(m.name)}を追加"><td><img src="${m.img}" alt=""><b>${esc(m.name)}</b></td><td>${esc(m.maker)}<small>${categoryNames[m.category]}</small></td><td>${m.ports.filter(p=>p.dir==='in').length} / ${m.ports.filter(p=>p.dir==='out').length}<span>＋</span></td></tr>`).join('')).join('')+'</tbody></table>';
- else $('#catalog').innerHTML=[...groups].map(([label,es])=>`<h3 class="catalog-group">${esc(label)}<span>${es.length}</span></h3>`+es.map(([k,m])=>`<article class="product" data-add="${k}" tabindex="0" role="button" aria-label="${esc(m.name)}を追加"><div class="productpic"><img src="${m.img}" alt="${esc(m.name)} ${m.generic?'汎用イラスト':'実機写真'}"><span class="add">＋</span></div><div class="maker">${esc(m.maker)}<span class="tag">${m.domain==='video'?'VIDEO / AV':'AUDIO'}</span></div><h3>${esc(m.name)}</h3><small>${m.ports.filter(p=>p.dir==='in').length} 入力 / ${m.ports.filter(p=>p.dir==='out').length} 出力</small></article>`).join('')).join('');
+ if(libraryView==='table')$('#catalog').innerHTML='<table class="catalog-table"><thead><tr><th>機材</th><th>ブランド / 種類</th><th>入 / 出</th></tr></thead><tbody>'+[...groups].map(([label,es])=>`<tr class="catalog-section"><th colspan="3">${esc(label)} · ${es.length}</th></tr>`+es.map(([k,m])=>`<tr data-add="${k}" tabindex="0" title="クリックで追加・ドラッグで配置" aria-label="${esc(m.name)}を追加"><td><img src="${m.img}" alt="" loading="lazy" decoding="async"><b>${esc(m.name)}</b></td><td>${esc(m.maker)}<small>${categoryNames[m.category]}</small></td><td>${m.ports.filter(p=>p.dir==='in').length} / ${m.ports.filter(p=>p.dir==='out').length}<span>＋</span></td></tr>`).join('')).join('')+'</tbody></table>';
+ else $('#catalog').innerHTML=[...groups].map(([label,es])=>`<h3 class="catalog-group">${esc(label)}<span>${es.length}</span></h3>`+es.map(([k,m])=>`<article class="product" data-add="${k}" tabindex="0" role="button" aria-label="${esc(m.name)}を追加"><div class="productpic"><img src="${m.img}" alt="${esc(m.name)} ${m.generic?'汎用イラスト':'実機写真'}" loading="lazy" decoding="async"><span class="add">＋</span></div><div class="maker">${esc(m.maker)}<span class="tag">${m.domain==='video'?'VIDEO / AV':'AUDIO'}</span></div><h3>${esc(m.name)}</h3><small>${m.ports.filter(p=>p.dir==='in').length} 入力 / ${m.ports.filter(p=>p.dir==='out').length} 出力</small></article>`).join('')).join('');
  if(!entries.length)$('#catalog').innerHTML='<p class="empty">該当する機材がありません。</p>';
  $$('[data-add]').forEach(el=>{el.onpointerdown=e=>startLibraryEquipmentDrag(e,el);el.onclick=()=>{if(Date.now()<Number(el.dataset.skipClickUntil||0))return;add(el.dataset.add)};el.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();add(el.dataset.add)}}});
+ catalogAVKey=key;
 }
 function audioInfoHTML(n){
  let m=models[n.model];if(!m.audioInfo)return '';
