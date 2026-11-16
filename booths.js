@@ -76,7 +76,7 @@ function startEquipmentPointer(e,element,options){
   delete n.dragHeight;n.group=outcome.group;if(!options.id){if(typeof revealModel==='function')revealModel(n.model);state.nodes.push(n);}selected=n.id;render();
   let group=state.groups.find(g=>g.id===n.group);if(group){Object.assign(group,fitBoothRect(group,boothMemberRects(group),canvasSize()));paintBooth(group);save()}toast(group?'「'+group.name+'」に追加しました（↶で戻せます）':'グループなしで配置しました（↶で戻せます）');
  }
- function up(ev){finish(ev)}function cancel(ev){if(ev?.pointerId!==undefined&&ev.pointerId!==e.pointerId)return;finish(last,true)}
+ function up(ev){if(ev.pointerId!==e.pointerId)return;move(ev);finish(ev)}function cancel(ev){if(ev?.pointerId!==undefined&&ev.pointerId!==e.pointerId)return;finish(last,true)}
  function key(ev){if(ev.key==='Escape'||(ev.ctrlKey||ev.metaKey)&&ev.key.toLowerCase()==='z'){ev.preventDefault();ev.stopImmediatePropagation();cancel()}else if(started&&['Enter','Delete','Backspace',' '].includes(ev.key)){ev.preventDefault();ev.stopImmediatePropagation()}}
  document.addEventListener('pointermove',move,{passive:false});document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cancel);document.addEventListener('keydown',key,true);element.addEventListener('lostpointercapture',cancel);
 }
