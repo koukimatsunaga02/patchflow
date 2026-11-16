@@ -8,7 +8,7 @@ function presenceURL(session){return session.owner?'/api/account/projects/'+sess
 function presenceHeaders(session){return session.owner?{'Content-Type':'application/json','X-Patchflow-Request':'account'}:{'Content-Type':'application/json',Authorization:'Bearer '+session.token}}
 function presenceSelection(){if(pending)return{type:'port',id:pending.node,port:pending.port};if(selectedEdge)return{type:'edge',id:selectedEdge};if(selectedGroup)return{type:'group',id:selectedGroup};if(selected)return{type:'node',id:selected};return null}
 function presenceSelectionChanged(){if(!presenceClient)return;renderPresence();schedulePresence()}
-function schedulePresence(){if(!currentPresenceSession()||presenceTimer)return;presenceTimer=setTimeout(()=>{presenceTimer=null;presenceTick()},Math.max(0,350-(Date.now()-presenceLast)))}
+function schedulePresence(){if(!currentPresenceSession()||presenceTimer)return;presenceTimer=setTimeout(()=>{presenceTimer=null;presenceTick()},Math.max(0,100-(Date.now()-presenceLast)))}
 async function presenceTick(){
  if(!presenceClient||presenceBusy||!currentPresenceSession()||document.hidden)return;
  let session=currentPresenceSession();presenceBusy=true;presenceLast=Date.now();
@@ -39,5 +39,5 @@ function initializePresence(){
  let layer=document.createElement('div');layer.id='presence-layer';layer.setAttribute('aria-hidden','true');$('#canvasframe').append(layer);
  let people=document.createElement('div');people.id='participants';people.setAttribute('aria-label','共同編集中の参加者');$('.workspacebar>div:first-child').append(people);
  $('#canvaswrap').addEventListener('pointermove',e=>{if(!currentPresenceSession())return;let p=canvasDropPoint(e);presenceCursor=p.x>=0&&p.y>=0&&p.x<=canvasSize().width&&p.y<=canvasSize().height?p:null;schedulePresence()},{passive:true});$('#canvaswrap').addEventListener('pointerleave',()=>{presenceCursor=null;schedulePresence()});$('#canvaswrap').addEventListener('scroll',schedulePresenceRender,{passive:true});document.addEventListener('pointerup',()=>setTimeout(presenceSelectionChanged,0));document.addEventListener('keydown',()=>setTimeout(presenceSelectionChanged,0));
- setInterval(()=>{if(currentPresenceSession())presenceTick();else if(presencePeers.length||$('#participants').children.length)renderPresence()},1000);window.addEventListener('pagehide',()=>leavePresence());window.addEventListener('blur',()=>{presenceCursor=null;presenceTick()});document.addEventListener('visibilitychange',()=>{if(document.hidden)leavePresence();else presenceTick()});window.addEventListener('resize',schedulePresenceRender);renderPresence();presenceTick();
+ setInterval(()=>{if(currentPresenceSession())presenceTick();else if(presencePeers.length||$('#participants').children.length)renderPresence()},100);window.addEventListener('pagehide',()=>leavePresence());window.addEventListener('blur',()=>{presenceCursor=null;presenceTick()});document.addEventListener('visibilitychange',()=>{if(document.hidden)leavePresence();else presenceTick()});window.addEventListener('resize',schedulePresenceRender);renderPresence();presenceTick();
 }
